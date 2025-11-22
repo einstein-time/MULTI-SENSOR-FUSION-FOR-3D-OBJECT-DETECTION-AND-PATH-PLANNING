@@ -1,0 +1,69 @@
+# Training Configuration
+
+# Dataset
+dataset:
+  name: "nuscenes"
+  dataroot: "./data/nuscenes"
+  version: "v1.0-mini"
+  sensors: ["CAM_FRONT", "LIDAR_TOP", "RADAR_FRONT"]
+
+  # Train/val split
+  train_scenes: 0.8
+  val_scenes: 0.2
+
+# Training parameters
+training:
+  batch_size: 4
+  num_workers: 4
+  num_epochs: 50
+
+  # Optimizer
+  optimizer:
+    type: "AdamW"
+    lr: 0.001
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+
+  # Learning rate scheduler
+  lr_scheduler:
+    type: "OneCycleLR"
+    max_lr: 0.003
+    pct_start: 0.4
+    div_factor: 10
+    final_div_factor: 10000
+
+  # Gradient clipping
+  grad_clip:
+    enabled: true
+    max_norm: 10.0
+
+# Loss weights
+loss:
+  cls_weight: 1.0
+  box_weight: 2.0
+  dir_weight: 0.2
+
+# Data augmentation
+augmentation:
+  enabled: true
+  rotation_range: [-0.785, 0.785]  # +/- 45 degrees
+  scaling_range: [0.95, 1.05]
+  translation_std: [0.5, 0.5, 0.5]
+  flip_probability: 0.5
+
+# Checkpointing
+checkpoint:
+  save_dir: "./checkpoints"
+  save_interval: 5  # epochs
+  keep_last_n: 5
+
+# Logging
+logging:
+  log_dir: "./logs"
+  log_interval: 10  # iterations
+  use_tensorboard: true
+
+# Distributed training
+distributed:
+  enabled: false
+  backend: "nccl"

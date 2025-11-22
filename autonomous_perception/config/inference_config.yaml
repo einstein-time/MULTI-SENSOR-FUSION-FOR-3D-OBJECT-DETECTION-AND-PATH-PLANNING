@@ -1,0 +1,62 @@
+# Inference Configuration
+
+# Model checkpoint
+model:
+  checkpoint_path: "./checkpoints/best_model.pth"
+  device: "cuda"  # "cuda" or "cpu"
+
+# Dataset
+dataset:
+  dataroot: "./data/nuscenes"
+  version: "v1.0-mini"
+  split: "val"
+
+# Inference parameters
+inference:
+  batch_size: 1
+  num_workers: 2
+
+  # Confidence threshold
+  score_threshold: 0.3
+
+  # NMS threshold
+  nms_threshold: 0.5
+
+# Tracking
+tracking:
+  enabled: true
+  max_age: 3  # Maximum frames to keep lost tracks
+  min_hits: 3  # Minimum detections before confirmed track
+  iou_threshold: 0.3  # IOU threshold for matching
+
+# Path planning
+planning:
+  enabled: true
+
+  # Occupancy grid
+  grid:
+    resolution: 0.2  # meters
+    width: 100  # meters
+    height: 100  # meters
+
+  # Path planning
+  planner:
+    algorithm: "a_star"
+    goal_distance: 30.0  # meters ahead
+    safety_margin: 2.0  # meters around obstacles
+
+  # Trajectory
+  trajectory:
+    horizon: 5.0  # seconds
+    dt: 0.1  # seconds
+    max_velocity: 15.0  # m/s
+    max_acceleration: 3.0  # m/s^2
+
+# Visualization
+visualization:
+  enabled: true
+  save_images: true
+  output_dir: "./outputs"
+  show_camera: true
+  show_bev: true
+  show_3d: true

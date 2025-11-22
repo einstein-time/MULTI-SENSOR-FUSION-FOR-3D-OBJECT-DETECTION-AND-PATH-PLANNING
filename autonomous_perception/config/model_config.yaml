@@ -1,0 +1,67 @@
+# PointPillars Model Configuration
+
+model:
+  name: "PointPillars"
+  num_classes: 10
+
+  # Point cloud range [x_min, y_min, z_min, x_max, y_max, z_max]
+  point_cloud_range: [0, -40.0, -3.0, 70.0, 40.0, 1.0]
+
+  # Pillar configuration
+  pillar:
+    max_points_per_pillar: 100
+    max_pillars: 12000
+    pillar_size: [0.16, 0.16, 4.0]  # x, y, z in meters
+
+  # Pillar feature network
+  pillar_feature_net:
+    in_channels: 9  # x, y, z, intensity, xc, yc, zc, xp, yp
+    out_channels: 64
+
+  # Backbone (2D CNN)
+  backbone:
+    in_channels: 64
+    layer_nums: [3, 5, 5]
+    layer_strides: [2, 2, 2]
+    num_filters: [64, 128, 256]
+
+  # Detection head
+  detection_head:
+    in_channels: 384  # Sum of num_filters
+    num_anchors_per_location: 2
+    box_code_size: 7  # x, y, z, w, l, h, yaw
+
+  # Anchor configuration
+  anchors:
+    - class_name: "car"
+      anchor_sizes: [[3.9, 1.6, 1.56]]
+      anchor_rotations: [0, 1.57]  # 0 and 90 degrees
+      anchor_bottom_heights: [-1.78]
+      matched_threshold: 0.6
+      unmatched_threshold: 0.45
+
+    - class_name: "pedestrian"
+      anchor_sizes: [[0.8, 0.6, 1.73]]
+      anchor_rotations: [0, 1.57]
+      anchor_bottom_heights: [-0.6]
+      matched_threshold: 0.5
+      unmatched_threshold: 0.35
+
+# Class names
+class_names:
+  - "car"
+  - "truck"
+  - "bus"
+  - "trailer"
+  - "construction_vehicle"
+  - "pedestrian"
+  - "motorcycle"
+  - "bicycle"
+  - "traffic_cone"
+  - "barrier"
+
+# NMS configuration
+nms:
+  nms_iou_threshold: 0.5
+  score_threshold: 0.1
+  max_detections: 500
